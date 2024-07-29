@@ -4,6 +4,11 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
     stages {
+        stage('Install Dependencies'){
+            steps{
+                sh 'npm install'
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building.."
