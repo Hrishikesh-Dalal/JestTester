@@ -1,9 +1,18 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:14'
+        }
+    }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
     stages {
+        stage('Test'){
+            steps{
+                sh 'node --version'
+            }
+        }
         stage('Build') {
             steps {
                 echo "Building.."
