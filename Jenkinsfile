@@ -1,50 +1,29 @@
 pipeline {
     agent any
-
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
+        DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-docker')
     }
-
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/hrishikeshdalal/jest.git'
+                echo "Building.."
+                sh 'docker build -t hrishikeshdalal/jest:latest .'
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
+        stage('Login'){
+            steps{
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-        stage('Run Tests') {
-            steps {
-                sh 'npm test'
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("hrishikeshdalal/jest:latest")
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
-                        docker.image("hrishikeshdalal/jest:latest").push()
-                    }
-                }
+        stage('Push'){
+            steps{
+                sh 'docker push hrishikeshdalal/jest:latest'
             }
         }
     }
-
     post {
-        success {
-            echo 'Build and push successful!'
-        }
-        failure {
-            echo 'Build or test failed.'
+        always{
+            sh 'docker logout'
         }
     }
 }
