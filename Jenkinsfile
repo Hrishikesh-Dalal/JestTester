@@ -1,30 +1,50 @@
 pipeline {
     agent any
-  
+
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                echo "Building.."
-                sh '''
-                echo "doing build stuff.."
-                '''
+                git branch: 'main', url: 'https://github.com/hrishikeshdalal/jest.git'
             }
         }
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
-                echo "Testing.."
-                sh '''
-                echo "doing test stuff.."
-                '''
+                sh 'npm install'
             }
         }
-        stage('Deliver') {
+        stage('Run Tests') {
             steps {
-                echo 'Deliver....'
-                sh '''
-                echo "doing delivery stuff.."
-                '''
+                sh 'npm test'
             }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("hrishikeshdalal/jest:latest")
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
+                        docker.image("hrishikeshdalal/jest:latest").push()
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build and push successful!'
+        }
+        failure {
+            echo 'Build or test failed.'
         }
     }
 }
