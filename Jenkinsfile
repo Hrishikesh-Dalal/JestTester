@@ -1,19 +1,21 @@
 pipeline {
-    agent {
-        node {
-            label 'docker-hub-node'
-        }
-    }
+    agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
     stages {
-        stage('Test'){
+        stage('Running tests'){
+            agent {
+                node {
+                    label 'docker-hub-node'
+                }
+            }
             steps{
                 sh 'node --version'
+                echo "Running tests..."
             }
         }
-        stage('Build') {
+        stage('Build & Deploy on DockerHub') {
             steps {
                 echo "Building.."
                 sh 'docker build -t hrishikeshdalal/jest:latest .'
