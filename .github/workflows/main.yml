@@ -3,7 +3,7 @@ name: Run Tests
 on:
   push:
     branches:
-      - main # You can specify the branches where you want the workflow to run
+      - main # Adjust as needed
   pull_request:
     branches:
       - main
@@ -14,15 +14,26 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16' # Specify the Node.js version you are using
+        node-version: '16'
 
     - name: Install dependencies
       run: npm install
+
+    - name: Check Node.js and npm version
+      run: |
+        node -v
+        npm -v
+
+    - name: List Jest binary
+      run: ls -l ./node_modules/.bin
+
+    - name: Make Jest executable
+      run: chmod +x ./node_modules/.bin/jest
 
     - name: Run tests
       run: npm test
