@@ -14,6 +14,7 @@ pipeline {
                 echo "Running tests..."
                 sh 'node --version'
                 sh 'npm install'
+                sh 'npm run test'
             }
         }
         stage('Build & Deploy on DockerHub') {
