@@ -18,8 +18,8 @@ pipeline {
         stage('Build & Deploy on DockerHub') {
             steps {
                 echo "Building.."
-                // sh 'docker build -t hrishikeshdalal/jest:latest .'
-                sh 'docker ps'
+                sh 'docker build -t hrishikeshdalal/jest:latest .'
+                // sh 'docker ps'
             }
         }
         stage('Login'){
