@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    pollSCM 'H/5 * * * *'
     environment {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
