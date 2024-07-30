@@ -22,7 +22,8 @@ pipeline {
         stage('Build & Deploy on DockerHub') {
             steps {
                 echo "Building.."
-                sh 'docker build -t hrishikeshdalal/jest:latest .'
+                // sh 'docker build -t hrishikeshdalal/jest:latest .'
+                sh 'docker --version'
             }
         }
         stage('Login'){
@@ -32,7 +33,7 @@ pipeline {
         }
         stage('Push'){
             steps{
-                sh 'docker push hrishikeshdalal/jest:latest'
+                // sh 'docker push hrishikeshdalal/jest:latest'
             }
         }
     }
