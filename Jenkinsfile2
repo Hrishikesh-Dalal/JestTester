@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
+    }
+    stages {
+        stage('Build and Push') {
+            steps {
+                script {
+                    def builder = Docker.withRegistry('https://index.docker.io/v1/', credentials: DOCKERHUB_CREDENTIALS) {
+                        Docker.buildxBuilder()
+                    }
+                    builder.build {
+                        context '.'
+                        tags "hrishikeshdalal/jest:${BUILD_ID}"
+                        push true
+                    }
+                }
+            }
+        }
+    }
+}
