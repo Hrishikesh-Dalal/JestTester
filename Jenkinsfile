@@ -1,29 +1,16 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
+        DOCKER_IMAGE = 'hrishikeshdalal/jest:latest'
     }
     stages {
-        stage('Build & Deploy on DockerHub') {
+        stage('Build and Push') {
             steps {
-                echo "Building.."
-                sh 'docker build -t hrishikeshdalal/jest:latest .'
+                withDockerRegistry(credentialsId: 'hrishikeshdalal-dockerhub') {
+                    docker.build(DOCKER_IMAGE)
+                    docker.push(DOCKER_IMAGE)
+                }
             }
-        }
-        stage('Login'){
-            steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-            }
-        }
-        stage('Push'){
-            steps{
-                sh 'docker push hrishikeshdalal/jest:latest'
-            }
-        }
-    }
-    post {
-        always{
-            sh 'docker logout'
         }
     }
 }
