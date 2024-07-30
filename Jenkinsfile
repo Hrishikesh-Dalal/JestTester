@@ -4,21 +4,22 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
     stages {
-        // stage('Running tests'){
-        //     agent {
-        //         node {
-        //             label 'docker-hub-node'
-        //         }
-        //     }
-        //     steps{
-        //         sh 'node --version'
-        //         echo "Running tests..."
-        //     }
-        // }
+        stage('Running tests'){
+            agent {
+                node {
+                    label 'docker-hub-node'
+                }
+            }
+            steps{
+                echo "Running tests..."
+                sh 'npm install'
+                sh 'npm run tests'
+            }
+        }
         stage('Build & Deploy on DockerHub') {
             steps {
                 echo "Building.."
-                sh 'docker build -t hrishikeshdalal/jest:latest .'
+                // sh 'docker build -t hrishikeshdalal/jest:latest .'
                 // sh 'docker ps'
             }
         }
