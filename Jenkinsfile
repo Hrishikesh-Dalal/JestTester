@@ -1,19 +1,19 @@
 pipeline {
-    agent any
+    agent {
+            node {
+                label 'docker-hub-node'
+            }
+        }
     environment {
         DOCKERHUB_CREDENTIALS = credentials('hrishikeshdalal-dockerhub')
     }
     stages {
         stage('Running tests'){
-            agent {
-                node {
-                    label 'docker-hub-node'
-                }
-            }
+            
             steps{
                 echo "Running tests..."
                 sh 'node --version'
-                // sh 'npm run tests'
+                sh 'npm install'
             }
         }
         stage('Build & Deploy on DockerHub') {
