@@ -23,7 +23,7 @@ pipeline {
             steps {
                 echo "Building.."
                 // sh 'docker build -t hrishikeshdalal/jest:latest .'
-                sh 'docker --version'
+                sh 'docker ps'
             }
         }
         stage('Login'){
